@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+    <title>WILDY — a three-minute Wilderness arcade</title>
+    <meta
+      name="description"
+      content="Survive three minutes in the Wilderness. Auto-cast rune bolts, collect shards, choose blessings, dash through the horde. A tiny browser survivor-like."
+    />
+    <meta name="theme-color" content="#08100a" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="stylesheet" href="./src/styles.css" />
+    <meta property="og:title" content="WILDY — a three-minute Wilderness arcade" />
+    <meta property="og:description" content="Auto-cast. Collect. Choose. Dash. Survive 3:00." />
+    <meta property="og:type" content="website" />
+  </head>
+  <body>
+    <canvas id="game" aria-label="WILDY game arena"></canvas>
+
+    <main id="app">
+      <section id="screen-title" class="screen title-screen">
+        <div class="title-inner">
+          <div class="title-top">
+            <span class="brand-rune" aria-hidden="true">
+              <svg viewBox="0 0 48 48">
+                <path d="M24 3 43 11v13c0 10.5-7.6 18.7-19 22C12.6 42.7 5 34.5 5 24V11L24 3Z" fill="none" stroke="currentColor" stroke-width="2.2" />
+                <path d="M14 25h6l3.2-8 5 17 3-9H34" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+            <span class="title-studio">a three-minute survival arcade</span>
+          </div>
+
+          <p class="title-kicker">The Wilderness is hungry tonight</p>
+          <h1 class="logo">WILDY<span class="logo-dot">.</span></h1>
+          <p class="title-sub">Auto-cast. Collect. Choose. Dash.<br />Survive three minutes. Then do it again.</p>
+
+          <div class="title-actions">
+            <button id="start-btn" class="btn btn-primary" type="button">
+              Enter the Wilderness
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </button>
+            <button id="sound-toggle" class="btn btn-ghost" type="button" aria-pressed="true">Sound on</button>
+          </div>
+
+          <p class="title-best">BEST LOOT <strong id="title-best">0</strong> <span id="title-record">no runs yet</span></p>
+
+          <details class="how-to">
+            <summary>How to survive</summary>
+            <div class="how-grid">
+              <div><b>1</b><span><strong>Move</strong> with WASD, arrows, or drag anywhere on touch.</span></div>
+              <div><b>2</b><span><strong>Never aim.</strong> Your staff auto-casts at the nearest horror.</span></div>
+              <div><b>3</b><span><strong>Collect</strong> rune shards. Each level, pick one of three blessings.</span></div>
+              <div><b>4</b><span><strong>Dash</strong> with Space or the rune button. It blinks through danger.</span></div>
+              <div><b>5</b><span><strong>Survive 3:00.</strong> The Greater Demon arrives at 2:30.</span></div>
+              <div><b>6</b><span><strong>Die.</strong> Laugh. Press one more run. That is the loop.</span></div>
+            </div>
+          </details>
+
+          <p class="title-foot">No downloads · runs offline · best score saved on this device</p>
+        </div>
+      </section>
+
+      <div id="hud" class="hud" hidden>
+        <div class="hud-top">
+          <div class="hud-stat">
+            <span>LOOT</span>
+            <strong id="hud-score">0</strong>
+          </div>
+
+          <div class="timer">
+            <span>SURVIVE</span>
+            <strong id="hud-time">3:00</strong>
+            <div class="timer-track"><i id="timer-fill"></i></div>
+          </div>
+
+          <div class="hud-stat hud-stat-right">
+            <span>KILLS</span>
+            <strong id="hud-kills">0</strong>
+          </div>
+
+          <div class="hud-buttons">
+            <button id="mute-btn" class="icon-btn" type="button" aria-label="Mute sound" aria-pressed="false">
+              <svg class="icon-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4V9Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" /><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /></svg>
+              <svg class="icon-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4V9Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" /><path d="m17 9 4 6m0-6-4 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /></svg>
+            </button>
+            <button id="pause-btn" class="icon-btn" type="button" aria-label="Pause">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" /></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="hud-xp">
+          <span id="hud-level">LV 1</span>
+          <div class="xp-track"><i id="xp-fill"></i></div>
+          <span id="xp-text">0 / 15</span>
+        </div>
+
+        <div id="combo-badge" class="combo-badge" hidden>
+          <span>×<b id="combo-count">2</b></span>
+          <small>COMBO</small>
+        </div>
+
+        <div id="boss-bar" class="boss-bar" hidden>
+          <span>GREATER DEMON</span>
+          <div class="boss-track"><i id="boss-fill"></i></div>
+        </div>
+
+        <div class="hud-bottom">
+          <div class="vital">
+            <div class="vital-label"><span>LIFE</span><b id="hp-text">100</b></div>
+            <div class="life-track"><i id="hp-fill"></i></div>
+          </div>
+
+          <div class="vital vital-dash">
+            <div class="vital-label"><span>DASH</span><b id="dash-text">READY</b></div>
+            <div class="dash-track"><i id="dash-fill"></i></div>
+          </div>
+        </div>
+
+        <div class="touch-hint" id="touch-hint">drag to move · tap DASH to blink</div>
+        <button id="dash-btn" class="dash-btn" type="button" aria-label="Dash">DASH</button>
+        <div id="joystick" class="joystick" hidden aria-hidden="true"><div class="stick" id="stick"></div></div>
+      </div>
+
+      <section id="screen-levelup" class="screen overlay" hidden>
+        <div class="levelup-inner">
+          <p class="kicker">LEVEL <span id="levelup-level">2</span></p>
+          <h2>Choose a blessing.</h2>
+          <p class="overlay-sub">The Wilderness gives nothing for free. Pick one.</p>
+          <div id="upgrade-cards" class="cards"></div>
+          <p class="overlay-hint">Press 1 · 2 · 3 or tap a card</p>
+        </div>
+      </section>
+
+      <section id="screen-pause" class="screen overlay pause-screen" hidden>
+        <div class="pause-card">
+          <p class="kicker">The horde waits</p>
+          <h2>Paused.</h2>
+          <p class="overlay-sub">Not even the Wilderness moves while you catch your breath.</p>
+          <div class="pause-actions">
+            <button id="resume-btn" class="btn btn-primary" type="button">Resume</button>
+            <button id="restart-btn" class="btn btn-ghost" type="button">Restart run</button>
+            <button id="quit-btn" class="btn btn-quiet" type="button">Abandon to title</button>
+          </div>
+          <p class="overlay-hint">P or Esc to resume</p>
+        </div>
+      </section>
+
+      <section id="screen-end" class="screen overlay end-screen" hidden>
+        <div class="end-card">
+          <p class="kicker" id="end-kicker">The Wilderness wins</p>
+          <h2 id="end-title">YOU DIED<span>.</span></h2>
+          <p class="overlay-sub" id="end-line">The horde took another one. The loot stays where it fell.</p>
+
+          <div class="end-score">
+            <span>LOOT</span>
+            <strong id="end-score">0</strong>
+          </div>
+
+          <div class="end-stats">
+            <div><span>Survived</span><b id="end-time">0:00</b></div>
+            <div><span>Kills</span><b id="end-kills">0</b></div>
+            <div><span>Level</span><b id="end-level">1</b></div>
+            <div><span>Best combo</span><b id="end-combo">0</b></div>
+          </div>
+
+          <p id="new-best" class="new-best" hidden>NEW BEST — the Wilderness remembers</p>
+
+          <div class="end-actions">
+            <button id="retry-btn" class="btn btn-primary" type="button">One more run</button>
+            <button id="home-btn" class="btn btn-ghost" type="button">Title screen</button>
+          </div>
+          <p class="overlay-hint">Enter for one more run</p>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>

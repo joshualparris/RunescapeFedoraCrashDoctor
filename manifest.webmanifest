@@ -1,0 +1,33 @@
+{
+  "name": "WILDY — Wilderness Survival",
+  "short_name": "WILDY",
+  "description": "A three-minute Wilderness survival arcade. Auto-cast, collect shards, choose blessings, dash through the horde.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#08100a",
+  "theme_color": "#08100a",
+  "categories": ["games", "entertainment"],
+  "icons": [
+    {
+      "src": "./assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

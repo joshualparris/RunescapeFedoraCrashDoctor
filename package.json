@@ -1,0 +1,20 @@
+{
+  "name": "wildy",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "WILDY — a three-minute Wilderness survival arcade for the browser.",
+  "scripts": {
+    "start": "python3 -m http.server 8137",
+    "serve": "python3 -m http.server 8137",
+    "test": "node --test",
+    "check": "node --check src/main.js && node --check src/engine.js && node --check src/render.js && node --check src/audio.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "jsdom": "^31.0.0"
+  }
+}
