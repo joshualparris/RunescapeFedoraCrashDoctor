@@ -6,7 +6,7 @@
     <title>WILDY — a three-minute Wilderness arcade</title>
     <meta
       name="description"
-      content="Survive three minutes in the Wilderness. Auto-cast rune bolts, collect shards, choose blessings, dash through the horde. A tiny browser survivor-like."
+      content="Explore a hand-drawn Wilderness, talk to seven characters, light three waystones and carry their blessings into a three-minute survivor-like. A tiny browser game."
     />
     <meta name="theme-color" content="#08100a" />
     <meta name="color-scheme" content="dark" />
@@ -32,36 +32,38 @@
                 <path d="M14 25h6l3.2-8 5 17 3-9H34" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             </span>
-            <span class="title-studio">a three-minute survival arcade</span>
+            <span class="title-studio">an explorable Wilderness arcade</span>
           </div>
 
-          <p class="title-kicker">The Wilderness is hungry tonight</p>
+          <p class="title-kicker">Explore. Talk. Light the waystones.</p>
           <h1 class="logo">WILDY<span class="logo-dot">.</span></h1>
-          <p class="title-sub">Auto-cast. Collect. Choose. Dash.<br />Survive three minutes. Then do it again.</p>
+          <p class="title-sub">Walk the Wilderness and talk to the people who live there.<br />Then carry their blessings into the Rift — three minutes, one life.</p>
 
           <div class="title-actions">
-            <button id="start-btn" class="btn btn-primary" type="button">
-              Enter the Wilderness
+            <button id="explore-btn" class="btn btn-primary" type="button">
+              Explore the Wilderness
               <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
             </button>
-            <button id="sound-toggle" class="btn btn-ghost" type="button" aria-pressed="true">Sound on</button>
+            <button id="start-btn" class="btn btn-ghost" type="button">Enter the Rift</button>
+            <button id="sound-toggle" class="btn btn-ghost btn-sound" type="button" aria-pressed="true">Sound on</button>
           </div>
 
           <p class="title-best">BEST LOOT <strong id="title-best">0</strong> <span id="title-record">no runs yet</span></p>
+          <p class="title-camp" id="title-camp" hidden></p>
 
           <details class="how-to">
-            <summary>How to survive</summary>
+            <summary>How to explore &amp; survive</summary>
             <div class="how-grid">
-              <div><b>1</b><span><strong>Move</strong> with WASD, arrows, or drag anywhere on touch.</span></div>
-              <div><b>2</b><span><strong>Never aim.</strong> Your staff auto-casts at the nearest horror.</span></div>
-              <div><b>3</b><span><strong>Collect</strong> rune shards. Each level, pick one of three blessings.</span></div>
-              <div><b>4</b><span><strong>Dash</strong> with Space or the rune button. It blinks through danger.</span></div>
-              <div><b>5</b><span><strong>Survive 3:00.</strong> The Greater Demon arrives at 2:30.</span></div>
-              <div><b>6</b><span><strong>Die.</strong> Laugh. Press one more run. That is the loop.</span></div>
+              <div><b>1</b><span><strong>Walk</strong> the Wilderness with WASD, arrows, or drag on touch.</span></div>
+              <div><b>2</b><span><strong>Talk</strong> with E. Everyone has a story, a hint, or a blessing.</span></div>
+              <div><b>3</b><span><strong>Light three waystones</strong> and the Rift opens at its southern edge.</span></div>
+              <div><b>4</b><span><strong>In the Rift,</strong> your staff auto-casts. Collect shards; pick blessings.</span></div>
+              <div><b>5</b><span><strong>Dash</strong> with Space or the rune button. Survive 3:00.</span></div>
+              <div><b>6</b><span><strong>Journal</strong> (J) keeps every memory. Camp blessings carry into runs.</span></div>
             </div>
           </details>
 
-          <p class="title-foot">No downloads · runs offline · best score saved on this device</p>
+          <p class="title-foot">No downloads · runs offline · your camp is saved on this device</p>
         </div>
       </section>
 
@@ -127,12 +129,49 @@
         <div id="joystick" class="joystick" hidden aria-hidden="true"><div class="stick" id="stick"></div></div>
       </div>
 
+      <div id="explore-hud" class="explore-hud" hidden>
+        <div class="explore-top">
+          <div class="explore-area">
+            <span>THE WILDERNESS</span>
+            <strong id="area-name">Ember Camp</strong>
+          </div>
+
+          <div class="explore-objective">
+            <span id="explore-objective">Light the waystones</span>
+            <b id="frag-count">0 / 3</b>
+            <div class="frag-dots" id="frag-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+          </div>
+
+          <div class="explore-actions">
+            <button id="journal-btn" class="hud-btn" type="button">Journal</button>
+            <button id="explore-home-btn" class="hud-btn hud-btn-quiet" type="button">Title</button>
+          </div>
+        </div>
+
+        <canvas id="minimap" class="minimap" width="200" height="150" aria-label="Wilderness map"></canvas>
+
+        <div id="area-banner" class="area-banner" hidden><span id="area-banner-name"></span></div>
+
+        <div id="interact-prompt" class="interact-prompt" hidden>
+          <kbd>E</kbd><span id="interact-label">Talk</span>
+        </div>
+
+        <p class="explore-hint" id="explore-hint">walk with WASD / drag · E interact · J journal</p>
+        <button id="interact-btn" class="interact-btn" type="button" hidden>TALK</button>
+        <div id="explore-joystick" class="joystick" hidden aria-hidden="true"><div class="stick" id="explore-stick"></div></div>
+      </div>
+
       <section id="screen-levelup" class="screen overlay" hidden>
         <div class="levelup-inner">
           <p class="kicker">LEVEL <span id="levelup-level">2</span></p>
           <h2>Choose a blessing.</h2>
           <p class="overlay-sub">The Wilderness gives nothing for free. Pick one.</p>
           <div id="upgrade-cards" class="cards"></div>
+          <div class="levelup-actions">
+            <button id="reroll-btn" class="btn-reroll" type="button" hidden>
+              Reroll <span id="reroll-count">1</span>
+            </button>
+          </div>
           <p class="overlay-hint">Press 1 · 2 · 3 or tap a card</p>
         </div>
       </section>
@@ -173,12 +212,71 @@
 
           <div class="end-actions">
             <button id="retry-btn" class="btn btn-primary" type="button">One more run</button>
-            <button id="home-btn" class="btn btn-ghost" type="button">Title screen</button>
+            <button id="camp-btn" class="btn btn-ghost" type="button">Return to camp</button>
+            <button id="home-btn" class="btn btn-quiet" type="button">Title screen</button>
           </div>
           <p class="overlay-hint">Enter for one more run</p>
         </div>
       </section>
+
+      <section id="screen-dialogue" class="screen overlay dialogue-screen" hidden>
+        <div class="dialogue-card" id="dialogue-card">
+          <button id="dialogue-close" class="dialogue-close" type="button" aria-label="Close dialogue">×</button>
+          <div class="dialogue-head">
+            <div class="npc-portrait" id="npc-portrait">M</div>
+            <div class="npc-id">
+              <span class="kicker" id="npc-title">Keeper of Ember Camp</span>
+              <h2 id="npc-name">Mira</h2>
+            </div>
+          </div>
+          <p class="dialogue-text" id="dialogue-text"></p>
+          <div class="dialogue-choices" id="dialogue-choices"></div>
+          <p class="dialogue-hint">1–4 to choose · Esc to leave</p>
+        </div>
+      </section>
+
+      <section id="screen-journal" class="screen overlay journal-screen" hidden>
+        <div class="journal-card">
+          <header class="journal-head">
+            <div>
+              <p class="kicker">Field notes</p>
+              <h2>Journal.</h2>
+            </div>
+            <button id="journal-close" class="hud-btn" type="button">Close</button>
+          </header>
+
+          <div class="journal-summary">
+            <div><span>WAYSTONES</span><b id="journal-frags">0 / 3</b></div>
+            <div><span>BLESSINGS</span><b id="journal-boons-count">0</b></div>
+            <div><span>CACHES</span><b id="journal-chests">0 / 3</b></div>
+            <div><span>LOOT</span><b id="journal-loot">0</b></div>
+          </div>
+
+          <div class="journal-columns">
+            <section>
+              <h3>Camp blessings</h3>
+              <div id="journal-boons" class="journal-list"></div>
+            </section>
+            <section>
+              <h3>Waystone memories</h3>
+              <div id="journal-stones" class="journal-list"></div>
+            </section>
+          </div>
+
+          <section class="journal-lore">
+            <h3>Lore</h3>
+            <div id="journal-lore" class="lore-list"></div>
+          </section>
+
+          <footer class="journal-foot">
+            <span>Everything here is stored only in this browser.</span>
+            <button id="journal-reset" class="btn-quiet" type="button">Reset journey</button>
+          </footer>
+        </div>
+      </section>
     </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
     <script type="module" src="./src/main.js"></script>
   </body>

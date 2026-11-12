@@ -1,6 +1,6 @@
 /* WILDY service worker: offline-first after the first load. */
 
-const VERSION = 'wildy-v4';
+const VERSION = 'wildy-v7';
 const ASSETS = [
   './',
   './index.html',
@@ -9,6 +9,9 @@ const ASSETS = [
   './src/engine.js',
   './src/render.js',
   './src/audio.js',
+  './src/explore.js',
+  './src/render-explore.js',
+  './src/npcs.js',
   './manifest.webmanifest',
   './assets/favicon.svg',
   './assets/icons/icon-192.png',

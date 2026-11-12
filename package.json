@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "WILDY — a three-minute Wilderness survival arcade for the browser.",
+  "description": "WILDY \u2014 an explorable Wilderness and a three-minute survivor-like for the browser.",
   "scripts": {
     "start": "python3 -m http.server 8137",
     "serve": "python3 -m http.server 8137",
     "test": "node --test",
-    "check": "node --check src/main.js && node --check src/engine.js && node --check src/render.js && node --check src/audio.js"
+    "check": "node --check src/main.js && node --check src/engine.js && node --check src/render.js && node --check src/audio.js && node --check src/explore.js && node --check src/render-explore.js && node --check src/npcs.js"
   },
   "engines": {
     "node": ">=18"

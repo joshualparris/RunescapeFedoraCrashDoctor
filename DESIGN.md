@@ -17,7 +17,8 @@ a readable system gives the player:
 3. **autonomy** — meaningful choices that shape *this* run,
 4. **sensation** — responsive, juicy feedback that makes cause and effect feel
    physical,
-5. **escalation and variety** — enough change to want one more run.
+5. **discovery** — a world that withholds context and rewards attention,
+6. **escalation and variety** — enough change to want one more run.
 
 WILDY is a small machine for delivering those five things in three minutes.
 
@@ -144,14 +145,53 @@ new-best flag. The restart button is the most prominent element on the end
 screen. The loop is designed to make the next attempt feel like a choice, not a
 punishment.
 
-## 7. What we deliberately left out
+## 7. Exploration: curiosity, autonomy and a safe counterweight
+
+Exploration is not "combat with the enemies removed". It serves different
+aesthetics: discovery, fantasy, narrative and expression. Three ideas shaped the
+explore mode.
+
+**Curiosity is an information gap.** Information-gap theory describes curiosity
+as the discomfort of noticing that you know less than you want to. The design
+therefore withholds the whole map and refuses to dump a quest log. Mira gives
+directions; Sable marks the stones; the Echo explains the Rift; the journal only
+records what you have actually learned. A locked Rift is a question, not a
+chore.
+
+**Autonomy needs real choices.** Conversations are not cosmetic. A few replies
+decide which camp blessing you can earn, and the player chooses which characters
+to seek out and in what order to light the stones. The rewards are small and
+permanent rather than a power spiral: +20 life, one reroll, +15% damage, +8%
+speed, plus buried loot.
+
+**Pacing needs a quiet half.** A calm mode makes the Rift's noise legible. The
+player can walk with no health bar and no timer, then opt into a three-minute
+spike. The contrast is the point: the Rift is frightening because the camp is
+not. Exploration has no fail state; the Rift is where failure has teeth.
+
+**The halves must touch.** Boons and loot cross the boundary, so the quiet mode
+matters to the loud one. A player who talks to everyone and opens every cache
+starts the Rift with a visibly different character.
+
+Implementation: a 2400×1800 map with a smooth camera, collision against
+trees/rocks/water, proximity prompts, seven characters, branching dialogue, three
+waystones, three caches, four boons, and a journal. The minimap deliberately
+hides unrevealed waystones until Sable marks them.
+
+Source: Loewenstein, *The psychology of curiosity* (1994) —
+[doi](https://doi.org/10.1037/0033-2909.116.1.75) ·
+[overview](https://en.wikipedia.org/wiki/Curiosity)
+
+## 8. What we deliberately left out
 
 Scope is a design tool. For this build:
 
 - no story campaign, cutscenes, inventory, shops or meta currency;
 - no multiplayer, accounts, analytics or network calls;
-- no procedural maps or content pipeline;
-- no permanent upgrades that make a bad run feel like wasted time.
+- no procedural maps, fast travel or content pipeline;
+- no combat in explore mode — the calm half stays calm;
+- no permanent upgrades that make a bad run feel like wasted time. The four camp
+  boons are small, earned, and capped.
 
 These are good features for a larger game. They would dilute the three-minute
 loop here.
@@ -172,6 +212,9 @@ loop here.
 | Death is a spike, not a wall | Elites / boss | elite every 30 s; boss 1900 HP at 150 s |
 | The run has a shape | Win | survive to 180 s **or** kill the boss early |
 | Failure is informative | End screen | score, time, kills, level, best combo, best score |
+| The world rewards looking | Explore | 2400×1800 map, 7 characters, 3 waystones, 3 caches, journal |
+| Conversation has weight | Dialogue | branching nodes; boons, flags and lore |
+| The quiet half matters | Carry-over | 4 camp boons and 750 buried loot into the Rift |
 
 XP curve: `xpNeeded(level) = 10 + 5 × level`. Drop values: imp 3, skeleton 5,
 brute 12, elite 30. A typical run reaches level 15–25 depending on how greedily
@@ -185,9 +228,15 @@ the player collects.
   and pays a 2,500 loot bonus.
 - The enemy cap (150) protects mobile frame rate. When the cap is reached,
   spawning pauses rather than deleting enemies.
-- The DOM smoke test runs the whole loop (boot → play → pause → level-up →
-  death → retry) in jsdom; the engine tests cover the spawn curve, XP, upgrades,
-  boss timing, contact damage, determinism and a full simulated run.
+- The Rift DOM smoke test runs the whole loop (boot → play → pause → level-up →
+  death → retry) in jsdom; the explore DOM smoke test runs explore → talk →
+  waystone → boon → Rift. The engine tests cover the spawn curve, XP, upgrades,
+  boss timing, contact damage, determinism, movement/collision, dialogue links
+  and a full simulated run.
+- Explore pace: 236 px/s on a 2400×1800 map. The three waystones are all
+  reachable in any order; no timer, no fail state, no combat.
+- The minimap shows met NPCs and unlocked stones; unlit stones appear only after
+  Sable's reveal, so talking to her changes how the world reads.
 
 ## Playtest questions
 
@@ -199,6 +248,12 @@ The next round of tuning should answer:
 4. Does the dash get used for damage avoidance or only for travel?
 5. On a phone, is the joystick comfortable in portrait and landscape?
 6. Does the 3:00 length leave the player wanting one more run, or relief?
+7. Do players find the first waystone from Mira's directions, or wander too long?
+8. Does Sable's map reveal feel useful, or does it arrive too late?
+9. Which NPC is approached first, and do the conversations hold attention?
+10. Does the switch from camp to Rift feel like a deliberate choice?
+11. Is the map too empty between landmarks, or does the quiet space help?
+12. Do players read the journal, or only collect the mechanical rewards?
 
 Instrumentation is intentionally absent. Playtests should be observed, not
 tracked, until the loop is fun without a dashboard.
@@ -217,5 +272,7 @@ tracked, until the loop is fun without a dashboard.
   [course page](https://www.cs.cornell.edu/courses/cs5152/2025sp/assignments/critique4/)
 - *Juice It or Lose It* (Martin Jonasson & Petri Purho) —
   [video](https://youtu.be/Fy0aCDmgnxg)
+- Loewenstein, *The psychology of curiosity: A review and reinterpretation*
+  (1994) — [doi](https://doi.org/10.1037/0033-2909.116.1.75)
 - Ars Technica, *Vampire Survivors … is my game of the year* —
   [article](https://arstechnica.com/gaming/2022/10/vampire-survivors-a-cheap-minimalistic-indie-game-is-my-game-of-the-year/)

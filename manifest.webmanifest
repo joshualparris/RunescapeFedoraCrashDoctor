@@ -1,7 +1,7 @@
 {
   "name": "WILDY — Wilderness Survival",
   "short_name": "WILDY",
-  "description": "A three-minute Wilderness survival arcade. Auto-cast, collect shards, choose blessings, dash through the horde.",
+  "description": "Explore a hand-drawn Wilderness, talk to seven characters, light three waystones and carry their blessings into a three-minute survivor-like.",
   "id": "./",
   "start_url": "./",
   "scope": "./",
